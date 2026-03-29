@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-sans: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  }
+
+  * { @apply border-surface-border; }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-ink text-white antialiased;
+    font-family: var(--font-sans);
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { @apply bg-surface; }
+  ::-webkit-scrollbar-thumb { @apply bg-surface-border rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-violet-dark; }
+}
+
+@layer components {
+  .gradient-text {
+    @apply bg-gradient-to-r from-violet to-emerald bg-clip-text text-transparent;
+  }
+
+  .glass {
+    @apply bg-surface/60 backdrop-blur-xl border border-surface-border;
+  }
+
+  .shimmer-bg {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      theme('colors.violet.DEFAULT' / 15%) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+}

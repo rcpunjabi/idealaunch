@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IdeaLaunch - Turn Your Idea Into a Live App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .progress-step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            padding: 10px;
+        }
+
+        .progress-step::before {
+            content: '';
+            width: 30px;
+            height: 30px;
+            background: #dee2e6;
+            border-radius: 50%;
+            display: block;
+            margin: 0 auto 8px;
+            font-weight: bold;
+            line-height: 30px;
+            color: white;
+        }
+
+        .progress-step.active::before {
+            background: #667eea;
+        }
+
+        .progress-step.completed::before {
+            background: #28a745;
+            content: '✓';
+        }
+
+        .progress-step span {
+            font-size: 13px;
+            color: #6c757d;
+        }
+
+        .progress-step.active span {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .content {
+            padding: 40px;
+            min-height: 400px;
+        }
+
+        .phase {
+            display: none;
+        }
+
+        .phase.active {
+            display: block;
+            animation: fadeIn 0.4s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .chat-container {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .message {
+            margin-bottom: 16px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .message.assistant {
+            flex-direction: row;
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #667eea;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            background: #764ba2;
+        }
+
+        .message-content {
+            background: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 70%;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .message.user .message-content {
+            background: #667eea;
+            color: white;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        input[type="text"],
+        textarea {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .requirements-list {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .requirement-item {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .requirement-item h4 {
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .requirement-item p {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+
+        .checkbox-list {
+            margin-top: 20px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .preview-container {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .preview-frame {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-placeholder {
+            color: #6c757d;
+            font-size: 18px;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        .deployment-status {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .deployment-status h3 {
+            color: #28a745;
+            margin-bottom: 16px;
+            font-size: 24px;
+        }
+
+        .deployment-url {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-family: monospace;
+            color: #667eea;
+            font-size: 16px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-card h4 {
+            color: #6c757d;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .stat-card p {
+            color: #667eea;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #667eea;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .info-box p {
+            color: #004085;
+            line-height: 1.6;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 12px 16px;
+            background: white;
+            border-radius: 12px;
+            width: fit-content;
+        }
+
+        .typing-indicator.active {
+            display: block;
+        }
+
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            background: #667eea;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 4px;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        .feature-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: #e7f3ff;
+            color: #004085;
+            border-radius: 12px;
+            font-size: 13px;
+            margin: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>IdeaLaunch</h1>
+            <p>Turn your idea into a live app in minutes</p>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-step active" data-phase="1">
+                <span>Share Your Idea</span>
+            </div>
+            <div class="progress-step" data-phase="2">
+                <span>Review Blueprint</span>
+            </div>
+            <div class="progress-step" data-phase="3">
+                <span>Build & Preview</span>
+            </div>
+            <div class="progress-step" data-phase="4">
+                <span>Create Repository</span>
+            </div>
+            <div class="progress-step" data-phase="5">
+                <span>Launch</span>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Phase 1: Idea Intake -->
+            <div class="phase active" id="phase1">
+                <div class="info-box">
+                    <p>👋 Hi! I'm here to help you bring your app idea to life. Let's start with a conversation about what you want to build. I'll ask you a few questions to understand your vision.</p>
+                </div>
+
+                <div class="chat-container" id="chatContainer">
+                    <div class="message assistant">
+                        <div class="message-avatar">AI</div>
+                        <div class="message-content">
+                            What kind of app would you like to build? Tell me about your idea in your own words.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="typing-indicator" id="typingIndicator">
+                    <span></span><span></span><span></span>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" id="userInput" placeholder="Type your message here..." />
+                    <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+
+            <!-- Phase 2: Requirements Generation -->
+            <div class="phase" id="phase2">
+                <h2 style="margin-bottom: 20px; color: #667eea;">Your App Blueprint</h2>
+                
+                <div class="info-box">
+                    <p>Based on our conversation, here's what we'll build for you. Review each section and approve when ready.</p>
+                </div>
+
+                <div class="requirements-list" id="requirementsList">
+                    <!-- Will be populated dynamically -->
+                </div>
+
+                <div class="checkbox-list">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="approve1" />
+                        <label for="approve1">I've reviewed the app purpose and target users</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="approve2" />
+                        <label for="approve2">The core features match what I need</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="approve3" />
+                        <label for="approve3">I'm ready to build this app</label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-secondary" onclick="goToPhase(1)">Back</button>
+                    <button class="btn btn-success" id="approveBtn" disabled onclick="approveRequirements()">Approve & Build</button>
+                </div>
+            </div>
+
+            <!-- Phase 3: Code Generation & Preview -->
+            <div class="phase" id="phase3">
+                <h2 style="margin-bottom: 20px; color: #667eea;">Building Your App</h2>
+
+                <div class="info-box">
+                    <p>🚀 We're generating your app using Claude AI. This usually takes 30-60 seconds. You'll see a live preview before deployment.</p>
+                </div>
+
+                <div class="preview-container">
+                    <h3 style="margin-bottom: 16px;">Live Preview</h3>
+                    <div class="preview-frame" id="previewFrame">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <p style="color: #6c757d; font-size: 14px;">Powered by E2B Sandbox</p>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary" id="continueToRepo" disabled onclick="goToPhase(4)">Looks Good - Continue</button>
+                </div>
+            </div>
+
+            <!-- Phase 4: GitHub Repo Creation -->
+            <div class="phase" id="phase4">
+                <h2 style="margin-bottom: 20px; color: #667eea;">Creating Your Repository</h2>
+
+                <div class="info-box">
+                    <p>📦 We're creating a private GitHub repository with your generated code. You'll have full access to modify and extend your app.</p>
+                </div>
+
+                <div class="preview-container">
+                    <div style="padding: 40px;">
+                        <div class="loading-spinner" style="margin: 0 auto 20px;"></div>
+                        <p style="color: #6c757d; font-size: 16px;">Setting up your repository...</p>
+                        <p style="color: #6c757d; font-size: 14px; margin-top: 8px;" id="repoStatus">Initializing GitHub API...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phase 5: Deployment -->
+            <div class="phase" id="phase5">
+                <h2 style="margin-bottom: 20px; color: #667eea;">🎉 Your App is Live!</h2>
+
+                <div class="deployment-status">
+                    <h3>Successfully Deployed</h3>
+                    <p style="color: #6c757d; margin-bottom: 20px;">Your app is now live and ready to use</p>
+
+                    <div class="deployment-url" id="deploymentUrl">
+                        https://your-app-name.vercel.app
+                    </div>
+
+                    <div class="button-group" style="justify-content: center;">
+                        <button class="btn btn-primary" onclick="window.open('https://your-app-name.vercel.app', '_blank')">
+                            Open App
+                        </button>
+                        <button class="btn btn-secondary" onclick="window.open('https://github.com/idealaunch/your-app', '_blank')">
+                            View Code
+                        </button>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h4>Deployment Time</h4>
+                            <p id="deployTime">3m 42s</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Repository</h4>
+                            <p style="font-size: 16px;">Created ✓</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>Status</h4>
+                            <p style="color: #28a745;">Live</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 30px; padding-top: 30px; border-top: 1px solid #e9ecef;">
+                        <h4 style="margin-bottom: 16px; color: #6c757d;">Next Steps</h4>
+                        <div style="text-align: left; max-width: 600px; margin: 0 auto;">
+                            <p style="color: #6c757d; line-height: 1.8; margin-bottom: 12px;">
+                                ✓ Share your app URL with users<br>
+                                ✓ Connect a custom domain (coming soon)<br>
+                                ✓ Monitor usage in your dashboard<br>
+                                ✓ Make changes by pushing to your GitHub repo
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="button-group" style="justify-content: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="resetDemo()">Build Another App</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentPhase = 1;
+        let conversationData = {
+            purpose: '',
+            targetUser: '',
+            features: [],
+            tone: '',
+            constraints: ''
+        };
+        let messageCount = 0;
+        const questions = [
+            "What kind of app would you like to build? Tell me about your idea in your own words.",
+            "Who is this app for? Describe your target user.",
+            "What are the 3 most important features your app needs?",
+            "What tone or style should your app have? (e.g., professional, friendly, minimal)",
+            "Are there any specific constraints or requirements? (e.g., mobile-friendly, dark mode, specific integrations)"
+        ];
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, 'user');
+            input.value = '';
+
+            // Store conversation data
+            storeConversationData(messageCount, message);
+            messageCount++;
+
+            // Show typing indicator
+            showTyping();
+
+            // Simulate AI response
+            setTimeout(() => {
+                hideTyping();
+                
+                if (messageCount < questions.length) {
+                    addMessage(questions[messageCount], 'assistant');
+                } else {
+                    addMessage("Perfect! I have everything I need. Let me create your app blueprint. Click below when you're ready to review.", 'assistant');
+                    setTimeout(() => {
+                        document.getElementById('userInput').disabled = true;
+                        const continueBtn = document.createElement('button');
+                        continueBtn.className = 'btn btn-primary';
+                        continueBtn.textContent = 'Review My Blueprint';
+                        continueBtn.style.marginTop = '20px';
+                        continueBtn.onclick = () => goToPhase(2);
+                        document.querySelector('#phase1 .input-group').parentElement.appendChild(continueBtn);
+                    }, 500);
+                }
+            }, 1500);
+        }
+
+        function addMessage(text, type) {
+            const container = document.getElementById('chatContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">${type === 'assistant' ? 'AI' : 'You'}</div>
+                <div class="message-content">${text}</div>
+            `;
+            
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function showTyping() {
+            document.getElementById('typingIndicator').classList.add('active');
+        }
+
+        function hideTyping() {
+            document.getElementById('typingIndicator').classList.remove('active');
+        }
+
+        function storeConversationData(index, message) {
+            switch(index) {
+                case 0:
+                    conversationData.purpose = message;
+                    break;
+                case 1:
+                    conversationData.targetUser = message;
+                    break;
+                case 2:
+                    conversationData.features = message.split(',').map(f => f.trim());
+                    break;
+                case 3:
+                    conversationData.tone = message;
+                    break;
+                case 4:
+                    conversationData.constraints = message;
+                    break;
+            }
+        }
+
+        function goToPhase(phase) {
+            // Hide all phases
+            document.querySelectorAll('.phase').forEach(p => p.classList.remove('active'));
+            
+            // Show target phase
+            document.getElementById(`phase${phase}`).classList.add('active');
+            
+            // Update progress bar
+            document.querySelectorAll('.progress-step').forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index + 1 === phase) {
+                    step.classList.add('active');
+                } else if (index + 1 < phase) {
+                    step.classList.add('completed');
+                }
+            });
+            
+            currentPhase = phase;
+
+            // Phase-specific actions
+            if (phase === 2) {
+                populateRequirements();
+            } else if (phase === 3) {
+                simulateCodeGeneration();
+            } else if (phase === 4) {
+                simulateRepoCreation();
+            }
+        }
+
+        function populateRequirements() {
+            const container = document.getElementById('requirementsList');
+            container.innerHTML = `
+                <div class="requirement-item">
+                    <h4>App Purpose</h4>
+                    <p>${conversationData.purpose || 'A web application to help users achieve their goals'}</p>
+                </div>
+                <div class="requirement-item">
+                    <h4>Target Users</h4>
+                    <p>${conversationData.targetUser || 'General users looking for a simple, intuitive solution'}</p>
+                </div>
+                <div class="requirement-item">
+                    <h4>Core Features</h4>
+                    <p>${conversationData.features.length > 0 ? conversationData.features.map(f => `<span class="feature-badge">${f}</span>`).join('') : '<span class="feature-badge">User authentication</span><span class="feature-badge">Dashboard</span><span class="feature-badge">Data management</span>'}</p>
+                </div>
+                <div class="requirement-item">
+                    <h4>Design & Tone</h4>
+                    <p>${conversationData.tone || 'Modern, clean, and user-friendly interface'}</p>
+                </div>
+                <div class="requirement-item">
+                    <h4>Technical Constraints</h4>
+                    <p>${conversationData.constraints || 'Responsive design, fast loading, accessible'}</p>
+                </div>
+            `;
+        }
+
+        function approveRequirements() {
+            goToPhase(3);
+        }
+
+        function simulateCodeGeneration() {
+            const previewFrame = document.getElementById('previewFrame');
+            
+            setTimeout(() => {
+                previewFrame.innerHTML = `
+                    <div style="width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: white;">
+                        <div style="text-align: center; padding: 40px;">
+                            <h2 style="margin-bottom: 16px;">Your App Preview</h2>
+                            <p style="opacity: 0.9;">This is a live preview of your generated application</p>
+                            <div style="margin-top: 30px;">
+                                <button style="padding: 12px 24px; background: white; color: #667eea; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Get Started</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                document.getElementById('continueToRepo').disabled = false;
+            }, 3000);
+        }
+
+        function simulateRepoCreation() {
+            const statusEl = document.getElementById('repoStatus');
+            const statuses = [
+                'Initializing GitHub API...',
+                'Creating private repository...',
+                'Committing generated files...',
+                'Setting up branch protection...',
+                'Configuring webhooks...',
+                'Repository created successfully!'
+            ];
+
+            let index = 0;
+            const interval = setInterval(() => {
+                if (index < statuses.length) {
+                    statusEl.textContent = statuses[index];
+                    index++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => goToPhase(5), 1000);
+                }
+            }, 800);
+        }
+
+        function resetDemo() {
+            currentPhase = 1;
+            messageCount = 0;
+            conversationData = {
+                purpose: '',
+                targetUser: '',
+                features: [],
+                tone: '',
+                constraints: ''
+            };
+            
+            document.getElementById('chatContainer').innerHTML = `
+                <div class="message assistant">
+                    <div class="message-avatar">AI</div>
+                    <div class="message-content">
+                        What kind of app would you like to build? Tell me about your idea in your own words.
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('userInput').disabled = false;
+            document.getElementById('userInput').value = '';
+            
+            const extraBtn = document.querySelector('#phase1 .button-group');
+            if (extraBtn) extraBtn.remove();
+            
+            goToPhase(1);
+        }
+
+        // Handle Enter key in input
+        document.getElementById('userInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Handle approval checkboxes
+        document.querySelectorAll('.checkbox-item input').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const allChecked = document.querySelectorAll('.checkbox-item input:checked').length === 3;
+                document.getElementById('approveBtn').disabled = !allChecked;
+            });
+        });
+
+        // Generate random deployment time
+        window.addEventListener('load', function() {
+            const minutes = Math.floor(Math.random() * 3) + 2;
+            const seconds = Math.floor(Math.random() * 60);
+            document.getElementById('deployTime').textContent = `${minutes}m ${seconds}s`;
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+.env
+.env.local
+.env.*.local
+*.pem
+.DS_Store
+.vercel
+idealaunch.zip
+IdeaLaunch_PRD.pdf
+"idea launchprototype.html"

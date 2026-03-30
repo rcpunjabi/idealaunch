@@ -53,13 +53,16 @@ export default function Pricing() {
   const router = useRouter();
 
   return (
-    <section className="py-24 px-4">
+    <section className="py-24 px-4 bg-cream-dark">
       <div className="max-w-5xl mx-auto">
         <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold mb-4">
+          <p className="text-terra text-sm font-semibold tracking-widest uppercase mb-3">
+            Pricing
+          </p>
+          <h2 className="text-4xl sm:text-5xl font-bold font-heading text-navy mb-4">
             Simple, honest pricing
           </h2>
-          <p className="text-white/50 text-lg max-w-lg mx-auto">
+          <p className="text-ink-light text-lg max-w-lg mx-auto">
             Start for free. Upgrade when you&apos;re ready. No hidden fees, no
             per-seat surprises.
           </p>
@@ -71,30 +74,43 @@ export default function Pricing() {
               key={tier.name}
               className={`relative p-8 rounded-2xl border flex flex-col transition-all duration-300 ${
                 tier.highlighted
-                  ? "bg-violet/10 border-violet shadow-xl shadow-violet/10 scale-[1.02]"
-                  : "bg-surface border-surface-border hover:border-violet/30"
+                  ? "bg-navy border-navy shadow-xl scale-[1.02]"
+                  : "bg-white border-border hover:border-terra/30 hover:shadow-md"
               }`}
             >
               {tier.highlighted && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 bg-violet text-white text-xs font-semibold rounded-full">
+                <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 bg-terra text-white text-xs font-bold rounded-full tracking-wide">
                   Most popular
                 </div>
               )}
 
               <div className="mb-6">
-                <h3 className="text-lg font-semibold mb-1">{tier.name}</h3>
+                <h3 className={`text-lg font-bold font-heading mb-1 ${tier.highlighted ? "text-white" : "text-navy"}`}>
+                  {tier.name}
+                </h3>
                 <div className="flex items-baseline gap-1 mb-1">
-                  <span className="text-4xl font-bold">${tier.price}</span>
-                  <span className="text-white/40 text-sm">/month</span>
+                  <span className={`text-4xl font-bold font-heading ${tier.highlighted ? "text-white" : "text-navy"}`}>
+                    ${tier.price}
+                  </span>
+                  <span className={`text-sm ${tier.highlighted ? "text-white/50" : "text-ink-lighter"}`}>
+                    /month
+                  </span>
                 </div>
-                <p className="text-sm text-white/40">{tier.limit}</p>
+                <p className={`text-sm ${tier.highlighted ? "text-white/50" : "text-ink-lighter"}`}>
+                  {tier.limit}
+                </p>
               </div>
 
               <ul className="space-y-3 mb-8 flex-1">
                 {tier.features.map((f) => (
                   <li key={f} className="flex items-start gap-2 text-sm">
-                    <Check size={16} className="text-emerald mt-0.5 shrink-0" />
-                    <span className="text-white/70">{f}</span>
+                    <Check
+                      size={16}
+                      className={`mt-0.5 shrink-0 ${tier.highlighted ? "text-terra-light" : "text-terra"}`}
+                    />
+                    <span className={tier.highlighted ? "text-white/80" : "text-ink-light"}>
+                      {f}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -103,9 +119,10 @@ export default function Pricing() {
                 onClick={() => router.push("/sign-up")}
                 className={`w-full py-3 rounded-xl font-semibold text-sm transition-all duration-200 ${
                   tier.highlighted
-                    ? "bg-violet hover:bg-violet-dark text-white shadow-lg shadow-violet/25"
-                    : "bg-surface-raised hover:bg-surface-border text-white border border-surface-border"
+                    ? "bg-terra hover:bg-terra-light text-white"
+                    : "btn-ghost text-navy border-border hover:border-navy"
                 }`}
+                style={tier.highlighted ? { boxShadow: "0 4px 16px rgba(196,105,59,0.35)" } : {}}
               >
                 {tier.cta}
               </button>
@@ -113,7 +130,7 @@ export default function Pricing() {
           ))}
         </div>
 
-        <p className="text-center text-sm text-white/30 mt-8">
+        <p className="text-center text-sm text-ink-lighter mt-8">
           All plans include SSL, CDN, and 99.9% uptime. Cancel any time.
         </p>
       </div>

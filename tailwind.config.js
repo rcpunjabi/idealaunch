@@ -8,33 +8,31 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        mono:  ['var(--font-mono)', 'monospace'],
-        sans:  ['var(--font-sans)', 'sans-serif'],
+        heading: ['var(--font-heading)', 'sans-serif'],
+        sans:    ['var(--font-sans)', 'sans-serif'],
       },
       colors: {
-        ink:     { DEFAULT: '#0a0a12', 50: '#f0f0ff', 100: '#e0e0ff', 900: '#0a0a12' },
-        violet:  { DEFAULT: '#7c6fff', light: '#a89fff', dark: '#5c4fff' },
-        emerald: { DEFAULT: '#00e5a0', dim: '#00b87f' },
-        surface: { DEFAULT: '#12121e', raised: '#1a1a2a', border: '#252535' },
+        cream:  { DEFAULT: '#FAF8F4', dark: '#F2EDE6', darker: '#E8DDD0' },
+        navy:   { DEFAULT: '#1B2E4F', light: '#2D4A7A', dark: '#0F1C30' },
+        terra:  { DEFAULT: '#C4693B', light: '#D4804F', dark: '#A8562F' },
+        gold:   { DEFAULT: '#D4973A', light: '#E0AC52', dark: '#B37D28' },
+        coral:  { DEFAULT: '#E05C3A', light: '#E87A5C', dark: '#C24828' },
+        ink:    { DEFAULT: '#2D3748', light: '#4A5568', lighter: '#718096' },
+        border: { DEFAULT: '#E2D9CE', dark: '#CEC3B5' },
       },
       animation: {
-        'fade-up':   'fadeUp 0.4s ease forwards',
-        'shimmer':   'shimmer 1.5s infinite',
-        'blink':     'blink 1s step-end infinite',
+        'fade-up': 'fadeUp 0.5s ease forwards',
+        'shimmer': 'shimmer 1.8s infinite',
       },
       keyframes: {
         fadeUp: {
-          '0%':   { opacity: 0, transform: 'translateY(12px)' },
-          '100%': { opacity: 1, transform: 'translateY(0)' },
+          '0%':   { opacity: '0', transform: 'translateY(16px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         shimmer: {
           '0%':   { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
         },
-        blink: {
-          '0%, 100%': { opacity: 1 },
-          '50%':      { opacity: 0 },
-        }
       },
     },
   },

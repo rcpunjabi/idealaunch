@@ -4,45 +4,67 @@
 
 @layer base {
   :root {
-    --font-sans: 'Inter', system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    --font-heading: 'Plus Jakarta Sans', sans-serif;
+    --font-sans: 'DM Sans', system-ui, sans-serif;
   }
 
-  * { @apply border-surface-border; }
+  * {
+    box-sizing: border-box;
+  }
 
   html {
     @apply scroll-smooth;
   }
 
   body {
-    @apply bg-ink text-white antialiased;
+    @apply bg-cream text-ink antialiased;
     font-family: var(--font-sans);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    @apply text-navy;
   }
 
   /* Custom scrollbar */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { @apply bg-surface; }
-  ::-webkit-scrollbar-thumb { @apply bg-surface-border rounded-full; }
-  ::-webkit-scrollbar-thumb:hover { @apply bg-violet-dark; }
+  ::-webkit-scrollbar-track { @apply bg-cream-dark; }
+  ::-webkit-scrollbar-thumb { @apply bg-border-dark rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-terra; }
 }
 
 @layer components {
+  /* Brand gradient: terracotta → gold */
   .gradient-text {
-    @apply bg-gradient-to-r from-violet to-emerald bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-terra to-gold bg-clip-text text-transparent;
   }
 
-  .glass {
-    @apply bg-surface/60 backdrop-blur-xl border border-surface-border;
+  /* Subtle warm card surface */
+  .card {
+    @apply bg-white border border-border rounded-2xl;
   }
 
-  .shimmer-bg {
-    background: linear-gradient(
-      90deg,
-      transparent 0%,
-      theme('colors.violet.DEFAULT' / 15%) 50%,
-      transparent 100%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
+  /* Primary CTA button */
+  .btn-primary {
+    @apply bg-terra hover:bg-terra-dark text-white font-semibold transition-all duration-200 shadow-md;
+    box-shadow: 0 4px 16px rgba(196, 105, 59, 0.25);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 6px 20px rgba(196, 105, 59, 0.35);
+  }
+
+  /* Ghost/outline button */
+  .btn-ghost {
+    @apply border border-border text-ink-light hover:text-navy hover:border-navy transition-all duration-200;
+  }
+
+  /* Warm section dividers */
+  .section-warm {
+    @apply bg-cream-dark;
+  }
+
+  .section-navy {
+    @apply bg-navy text-white;
   }
 }

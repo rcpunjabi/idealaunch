@@ -3,9 +3,6 @@ import { stripe, planFromPriceId } from "@/lib/stripe";
 import { upsertSubscription } from "@/lib/supabase";
 import type Stripe from "stripe";
 
-// Disable Next.js body parsing — Stripe needs the raw body for signature verification
-export const config = { api: { bodyParser: false } };
-
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 export async function POST(req: NextRequest) {

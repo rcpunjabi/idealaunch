@@ -26,9 +26,9 @@ export default function NewProjectPage() {
   const currentStepIdx = STEPS.findIndex((s) => s.key === step);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-cream">
       {/* Step progress header */}
-      <div className="sticky top-[57px] z-30 bg-ink/80 backdrop-blur-md border-b border-surface-border px-4 py-3">
+      <div className="sticky top-[57px] z-30 bg-cream/90 backdrop-blur-md border-b border-border px-4 py-3">
         <div className="max-w-3xl mx-auto">
           <div className="flex items-center gap-2">
             {STEPS.map((s, i) => {
@@ -41,23 +41,23 @@ export default function NewProjectPage() {
                   <div
                     className={`flex items-center gap-2 text-sm transition-all ${
                       isCurrent
-                        ? "text-white"
+                        ? "text-navy"
                         : isComplete
-                        ? "text-emerald"
-                        : "text-white/30"
+                        ? "text-terra"
+                        : "text-ink-lighter"
                     }`}
                   >
                     <div
                       className={`w-6 h-6 rounded-full flex items-center justify-center border transition-all ${
                         isComplete
-                          ? "bg-emerald border-emerald"
+                          ? "bg-terra border-terra"
                           : isCurrent
-                          ? "border-violet bg-violet/10"
-                          : "border-surface-border"
+                          ? "border-terra bg-terra/10"
+                          : "border-border"
                       }`}
                     >
                       {isComplete ? (
-                        <Check size={12} className="text-ink" />
+                        <Check size={12} className="text-white" />
                       ) : (
                         <Icon size={12} />
                       )}
@@ -70,9 +70,7 @@ export default function NewProjectPage() {
                   {i < STEPS.length - 1 && (
                     <div
                       className={`w-8 h-px transition-colors ${
-                        i < currentStepIdx
-                          ? "bg-emerald/50"
-                          : "bg-surface-border"
+                        i < currentStepIdx ? "bg-terra/40" : "bg-border"
                       }`}
                     />
                   )}
@@ -87,10 +85,12 @@ export default function NewProjectPage() {
       <div className="max-w-3xl mx-auto px-4 py-8">
         {/* Step 1: Intake chat */}
         {step === "intake" && (
-          <div className="h-[calc(100vh-160px)] flex flex-col rounded-2xl border border-surface-border bg-surface overflow-hidden">
-            <div className="p-4 border-b border-surface-border">
-              <h1 className="font-semibold">Tell me about your app</h1>
-              <p className="text-sm text-white/50 mt-0.5">
+          <div className="h-[calc(100vh-160px)] flex flex-col rounded-2xl border border-border bg-white overflow-hidden shadow-sm">
+            <div className="p-4 border-b border-border">
+              <h1 className="font-semibold font-heading text-navy">
+                Tell me about your app
+              </h1>
+              <p className="text-sm text-ink-lighter mt-0.5">
                 Answer a few questions — no technical knowledge needed
               </p>
             </div>
@@ -109,10 +109,10 @@ export default function NewProjectPage() {
         {step === "requirements" && projectId && blueprint && (
           <div>
             <div className="mb-6">
-              <h1 className="text-2xl font-bold mb-1">
+              <h1 className="text-2xl font-bold font-heading text-navy mb-1">
                 Your App Blueprint
               </h1>
-              <p className="text-white/50">
+              <p className="text-ink-lighter">
                 Here&apos;s what IdeaLaunch will build. Review and approve.
               </p>
             </div>
@@ -128,8 +128,10 @@ export default function NewProjectPage() {
         {step === "build" && projectId && (
           <div>
             <div className="mb-6">
-              <h1 className="text-2xl font-bold mb-1">Building your app</h1>
-              <p className="text-white/50">
+              <h1 className="text-2xl font-bold font-heading text-navy mb-1">
+                Building your app
+              </h1>
+              <p className="text-ink-lighter">
                 Sit back — this takes a couple of minutes.
               </p>
             </div>
@@ -137,7 +139,6 @@ export default function NewProjectPage() {
               projectId={projectId}
               onDeployed={(url) => {
                 setDeploymentUrl(url);
-                // Navigate to project page after a brief delay
                 setTimeout(() => router.push(`/projects/${projectId}`), 2000);
               }}
             />

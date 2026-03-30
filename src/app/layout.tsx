@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ClerkProvider } from "@clerk/nextjs";
 import { Plus_Jakarta_Sans, DM_Sans } from "next/font/google";
+import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
 const plusJakarta = Plus_Jakarta_Sans({
@@ -17,14 +18,60 @@ const dmSans = DM_Sans({
   display: "swap",
 });
 
+const APP_URL = "https://idealaunch-five.vercel.app";
+
 export const metadata: Metadata = {
-  title: "IdeaLaunch — Your Idea, Live This Week",
+  metadataBase: new URL(APP_URL),
+  title: {
+    default: "IdeaLaunch — Turn Any Idea Into a Live App, No Code Required",
+    template: "%s | IdeaLaunch",
+  },
   description:
-    "Turn your app idea into a live, deployed product — no coding required. Describe your idea, approve your blueprint, and watch IdeaLaunch build and deploy it for you.",
+    "Describe your app idea in plain English. IdeaLaunch builds it, deploys it, and hands you a live URL — no coding, no developers, no waiting. From idea to live app in under 5 minutes.",
+  keywords: [
+    "no code app builder",
+    "AI app generator",
+    "build app without coding",
+    "non-technical founder tools",
+    "app builder for entrepreneurs",
+    "launch app fast",
+    "idea to app",
+  ],
+  authors: [{ name: "IdeaLaunch" }],
+  creator: "IdeaLaunch",
   openGraph: {
-    title: "IdeaLaunch — Spark. Scale. Repeat.",
-    description: "Your idea. Live this week.",
     type: "website",
+    url: APP_URL,
+    siteName: "IdeaLaunch",
+    title: "IdeaLaunch — Your Idea. Live This Week.",
+    description:
+      "Turn any app idea into a real, deployed product in minutes. No code. No developers. Just describe it and go.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "IdeaLaunch — Turn Any Idea Into a Live App",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "IdeaLaunch — Your Idea. Live This Week.",
+    description:
+      "Turn any app idea into a real, deployed product in minutes. No code required.",
+    images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
@@ -36,7 +83,10 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className={`${plusJakarta.variable} ${dmSans.variable}`}>
-        <body>{children}</body>
+        <body>
+          {children}
+          <Analytics />
+        </body>
       </html>
     </ClerkProvider>
   );

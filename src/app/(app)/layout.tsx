@@ -4,24 +4,27 @@ import { LayoutDashboard, Plus } from "lucide-react";
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-ink flex flex-col">
+    <div className="min-h-screen bg-cream flex flex-col">
       {/* Top nav */}
-      <header className="sticky top-0 z-40 flex items-center justify-between px-6 py-3 glass border-b border-surface-border/50">
-        <Link href="/dashboard" className="text-xl font-bold gradient-text">
-          IdeaLaunch
+      <header className="sticky top-0 z-40 flex items-center justify-between px-6 py-3 bg-cream/90 backdrop-blur-xl border-b border-border">
+        <Link
+          href="/dashboard"
+          className="text-xl font-bold font-heading text-navy"
+        >
+          Idea<span className="text-terra">Launch</span>
         </Link>
 
         <nav className="hidden sm:flex items-center gap-1">
           <Link
             href="/dashboard"
-            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-white/60 hover:text-white hover:bg-surface-raised transition-all"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-ink-light hover:text-navy hover:bg-cream-dark transition-all"
           >
             <LayoutDashboard size={15} />
             My apps
           </Link>
           <Link
             href="/new"
-            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-white/60 hover:text-white hover:bg-surface-raised transition-all"
+            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-ink-light hover:text-navy hover:bg-cream-dark transition-all"
           >
             <Plus size={15} />
             New app

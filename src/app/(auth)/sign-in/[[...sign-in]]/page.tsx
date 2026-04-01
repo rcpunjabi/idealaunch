@@ -2,23 +2,36 @@ import { SignIn } from "@clerk/nextjs";
 
 export default function SignInPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-ink px-4">
+    <div className="min-h-screen flex items-center justify-center bg-cream px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold gradient-text">IdeaLaunch</h1>
-          <p className="text-white/50 mt-2">Welcome back</p>
+          <h1 className="text-3xl font-bold text-navy">IdeaLaunch</h1>
+          <p className="text-navy/60 mt-2">Welcome back</p>
         </div>
         <SignIn
           appearance={{
             elements: {
               rootBox: "w-full",
-              card: "bg-surface border border-surface-border shadow-2xl",
-              headerTitle: "text-white",
-              headerSubtitle: "text-white/50",
-              formButtonPrimary: "bg-violet hover:bg-violet-dark",
+              card: "bg-white border border-cream-dark shadow-lg rounded-2xl",
+              headerTitle: "text-navy font-bold",
+              headerSubtitle: "text-navy/60",
+              socialButtonsBlockButton:
+                "border border-cream-dark text-navy hover:bg-cream transition-colors",
+              socialButtonsBlockButtonText: "text-navy font-medium",
+              dividerLine: "bg-cream-dark",
+              dividerText: "text-navy/40",
+              formFieldLabel: "text-navy font-medium",
               formFieldInput:
-                "bg-surface-raised border-surface-border text-white",
-              footerActionLink: "text-violet",
+                "border-cream-dark bg-cream text-navy placeholder:text-navy/40 focus:border-terra focus:ring-terra",
+              formButtonPrimary:
+                "bg-terra hover:bg-terra/90 text-white font-semibold",
+              footerActionText: "text-navy/60",
+              footerActionLink: "text-terra hover:text-terra/80 font-medium",
+              identityPreviewText: "text-navy",
+              identityPreviewEditButton: "text-terra",
+              formResendCodeLink: "text-terra",
+              otpCodeFieldInput: "border-cream-dark text-navy",
+              alertText: "text-navy",
             },
           }}
         />

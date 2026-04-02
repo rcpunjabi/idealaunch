@@ -113,13 +113,14 @@ export default function NewProjectPage() {
                 Your App Blueprint
               </h1>
               <p className="text-ink-lighter">
-                Here&apos;s what IdeaLaunch will build. Review and approve.
+                Review what IdeaLaunch will build, then approve to start.
               </p>
             </div>
             <RequirementsReview
               projectId={projectId}
               blueprint={blueprint}
               onApproved={() => setStep("build")}
+              onEdit={() => setStep("intake")}
             />
           </div>
         )}

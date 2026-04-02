@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 import { stripe, PRICES } from "@/lib/stripe";
 import { getUserSubscription, upsertSubscription } from "@/lib/supabase";

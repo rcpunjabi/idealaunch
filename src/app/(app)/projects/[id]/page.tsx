@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { redirect, notFound } from "next/navigation";
 import { getProject } from "@/lib/supabase";
 import { ExternalLink, Github, ArrowLeft, CheckCircle, Clock, Rocket } from "lucide-react";

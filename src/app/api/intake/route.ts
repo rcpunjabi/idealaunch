@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs";
 import { NextRequest, NextResponse } from "next/server";
 import { sendIntakeMessage } from "@/lib/claude";
 import {
@@ -12,16 +12,21 @@ import {
 } from "@/lib/supabase";
 import { PLAN_LIMITS } from "@/lib/stripe";
 
+const ADMIN_USER_IDS = (process.env.ADMIN_USER_IDS ?? "").split(",").filter(Boolean);
+
 export async function POST(req: NextRequest) {
   const { userId } = auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { projectId, message } = await req.json();
 
+  const isAdmin = ADMIN_USER_IDS.includes(userId);
+
   try {
     // ── Rate limiting ────────────────────────────────────────────────
     // Only check limits when starting a NEW project (no projectId yet)
-    if (!projectId) {
+    // Admin users bypass all limits
+    if (!projectId && !isAdmin) {
       const sub = await getUserSubscription(userId);
       const limit = PLAN_LIMITS[sub.plan];
 

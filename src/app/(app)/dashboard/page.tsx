@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getProjectsByUser, getUserSubscription } from "@/lib/supabase";
@@ -6,6 +6,8 @@ import { PLAN_LIMITS } from "@/lib/stripe";
 import ProjectCard from "@/components/dashboard/ProjectCard";
 import UpgradePrompt from "@/components/dashboard/UpgradePrompt";
 import { Plus, Lightbulb, Zap } from "lucide-react";
+
+const ADMIN_USER_IDS = (process.env.ADMIN_USER_IDS ?? "").split(",").filter(Boolean);
 
 export default async function DashboardPage({
   searchParams,
@@ -15,6 +17,8 @@ export default async function DashboardPage({
   const { userId } = auth();
   if (!userId) redirect("/sign-in");
 
+  const isAdmin = ADMIN_USER_IDS.includes(userId);
+
   const [projects, sub] = await Promise.all([
     getProjectsByUser(userId),
     getUserSubscription(userId),
@@ -22,7 +26,7 @@ export default async function DashboardPage({
 
   const limit = PLAN_LIMITS[sub.plan];
   const usedCount = sub.plan === "free" ? projects.length : sub.buildsUsed;
-  const atLimit = usedCount >= limit;
+  const atLimit = isAdmin ? false : usedCount >= limit;
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10">
@@ -48,7 +52,9 @@ export default async function DashboardPage({
         <div className="flex items-center gap-3">
           {/* Plan badge */}
           <span className="hidden sm:inline-flex items-center px-3 py-1 rounded-full bg-cream-dark border border-border text-xs font-semibold text-ink-light capitalize">
-            {sub.plan === "free" ? "Free" : sub.plan === "starter" ? "Starter" : "Pro"}&nbsp;·&nbsp;{usedCount}/{limit === 1 && sub.plan === "free" ? "1 build" : `${limit}/mo`}
+            {isAdmin
+              ? "Admin · Unlimited"
+              : `${sub.plan === "free" ? "Free" : sub.plan === "starter" ? "Starter" : "Pro"}\u00a0·\u00a0${usedCount}/${limit === 1 && sub.plan === "free" ? "1 build" : `${limit}/mo`}`}
           </span>
 
           {!atLimit && (
@@ -63,8 +69,8 @@ export default async function DashboardPage({
         </div>
       </div>
 
-      {/* Upgrade banner when at limit */}
-      {atLimit && <UpgradePrompt plan={sub.plan} />}
+      {/* Upgrade banner when at limit (never show for admin) */}
+      {atLimit && !isAdmin && <UpgradePrompt plan={sub.plan} />}
 
       {/* Empty state */}
       {projects.length === 0 && !atLimit && (
